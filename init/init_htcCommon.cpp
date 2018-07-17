@@ -129,9 +129,13 @@ static void set_ro_product_device(void)
 
 void set_props_from_build(void)
 {
+#ifdef AB_OTA_UPDATER
+    if (access("/system/system/build.prop", R_OK) == 0)
+        set_props_from_file("/system/system/build.prop");
+#else
     if (access("/system/build.prop", R_OK) == 0)
         set_props_from_file("/system/build.prop");
-
+#endif
     else if (mkdir("/tmpsys", 777) == 0) {
         char *system_blk_dev = find_system_from_fstab();
 
